@@ -1,0 +1,47 @@
+# Make a project 
+# Create a bucket
+     	# BUCKET_NAME = 'insert_bucket_name'
+	# REGION = us-central1
+	# gsutil mb -l $REGION gs://$BUCKET_NAME
+# copy data to bucket 
+	#gsutil cp -r data gs://$BUCKET_NAME/data 
+	#TRAIN_DATA = gs://$BUCKET_NAME/data/train_data
+	#EVAL_DATA = gs://$BUCKET_NAME/data/eval_data
+# JOB_NAME = <insert job name> 
+# OUTPUT_PATH=gs://$BUCKET_NAME/$JOB_NAME
+
+
+
+BUCKET_NAME=ranking-models
+REGION=us-central1
+JOB_NAME=ranking_model_16
+OUTPUT_PATH=gs://$BUCKET_NAME/$JOB_NAME
+
+X_TRAIN=gs://$BUCKET_NAME/data/X_train.pkl
+X_TEST=gs://$BUCKET_NAME/data/X_test.pkl
+Y_TRAIN=gs://$BUCKET_NAME/data/y_train.pkl
+Y_TEST=gs://$BUCKET_NAME/data/y_test.pkl
+
+QUERY=gs://$BUCKET_NAME/data1/query-embeddings.pkl
+PRODUCT=gs://$BUCKET_NAME/data1/product_embeddings.pkl 
+
+gcloud ai-platform jobs submit training $JOB_NAME --job-dir $OUTPUT_PATH --runtime-version 1.14 --python-version 3.5 --config cloudml-gpu.yaml --module-name trainer.task --package-path trainer/ --region $REGION -- --query-embeddings $QUERY --product-embeddings $PRODUCT --X-train-data $X_TRAIN --X-test-data $X_TEST --y-train-data $Y_TRAIN --y-test-data $Y_TEST
+
+gcloud ai-platform jobs submit training $JOB_NAME \
+	-- job-dir $OUTPUT_PATH \  
+	-- module-name trainer.task\  
+	-- package-path trainer/ \  
+	-- python-version 3.5 \   
+	-- region $REGION \  
+	-- \  
+	-- query-embeddings $QUERY\  
+	-- product-embeddings $PRODUCT\  
+	-- X-train-data $X_TRAIN \  
+	-- X-test-data $X_TEST \  
+	-- y-train-data $Y_TRAIN \  
+	-- y-test-data $Y_TEST \  
+	-- runtime-version 1.14  
+
+
+
+
