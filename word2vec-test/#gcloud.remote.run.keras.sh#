@@ -1,0 +1,1 @@
+gcloud ml-engine jobs submit training JOB --module-name=trainer.word2vec_gcs  --package-path=./trainer --job-dir=gs://word2vec-test --python-version 3.7.3 --region=asia-southeast1 --config=trainer/cloudml-gpu.yaml
